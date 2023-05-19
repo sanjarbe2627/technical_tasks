@@ -5,7 +5,7 @@ from rest_framework.pagination import PageNumberPagination, replace_query_param,
 
 from django.conf import settings
 
-PER_PAGE = 10
+PER_PAGE = settings.PER_PAGE
 
 
 class CustomPagination(PageNumberPagination):
@@ -14,18 +14,17 @@ class CustomPagination(PageNumberPagination):
     max_page_size = 1000
 
     def __init__(self):
-        self.reverse, self.queryset = False, False
+        self.reverse = False
         self.request, self.paginator, self.page, self.count = None, None, None, 0
 
     def paginate_queryset(self, queryset, request, view=None):
         self.count = queryset.count()
-        self.queryset = queryset
         page_size = self.get_page_size(request)
 
         if not page_size:
             return None
 
-        self.paginator = self.django_paginator_class(self.queryset, page_size)
+        self.paginator = self.django_paginator_class(queryset, page_size)
         page_number = self.get_page_number(request, self.paginator)
         try:
             self.page = self.paginator.page(page_number)
@@ -46,10 +45,12 @@ class CustomPagination(PageNumberPagination):
         return replace_query_param(url, self.page_query_param, page_number)
 
     def get_previous_link(self):
+        if self.count == 0:
+            return None
         if not self.page:
             self.reverse = True
             self.page = self.paginator.page(self.paginator.num_pages)
-            return self.get_previous_link() if self.queryset else None
+            return self.get_previous_link()
 
         if not self.page.has_previous() and not self.reverse:
             return None

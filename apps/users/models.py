@@ -4,6 +4,7 @@ from django.contrib.auth.models import PermissionsMixin, UserManager
 from django.utils.translation import gettext_lazy as _
 
 
+# User model For Task 1
 class User(AbstractBaseUser, PermissionsMixin):
     """ Project User model"""
 
@@ -39,3 +40,41 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = "User"
         verbose_name_plural = "Users"
         ordering = ['-date_joined']
+
+
+# Sponsor model for Task 2
+class Sponsor(models.Model):
+    """ Project Sponsors """
+
+    class SponsorType(models.TextChoices):
+        PHYSICAL = "PHYSICAL", _("Physical person")
+        LEGAL = "LEGAL", _("Legal entity")
+
+    class Status(models.TextChoices):
+        NEW = "NEW", _("New")
+        MODERATION = "MODERATION", _("In moderation")
+        CANCELED = "CANCELED", _("Canceled")
+        CONFIRMED = "CONFIRMED", _("Confirmed")
+
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="sponsor"
+    )
+    sponsor_type = models.CharField(
+        max_length=15, choices=SponsorType.choices, default=SponsorType.LEGAL
+    )
+    status = models.CharField(
+        max_length=12, choices=Status.choices, default=Status.MODERATION
+    )
+    summa = models.BigIntegerField(
+        help_text=_("Sponsorship amount"), null=False, blank=False
+    )
+    organization = models.CharField(
+        help_text=_("Organization name"), max_length=200, null=True, blank=True
+    )
+
+    def __str__(self):
+        return f"{self.user}"
+
+    class Meta:
+        verbose_name_plural = "Sponsors"
+        ordering = ['-user__date_joined']
