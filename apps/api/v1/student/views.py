@@ -85,6 +85,8 @@ class StudentView(GenericAPIView):
 
 # Task 4
 class StudentListPaginationView(GenericAPIView):
+    serializer_class = serializers.StudentSerializer
+
     def get_object(self, *args, **kwargs):
         try:
             object = Student.objects.get(pk=int(kwargs.get("pk")))
