@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.api.v1.auth import serializers
 
 
-# Task 1
+# Task 1 and 5
 class LoginView(generics.CreateAPIView):
     serializer_class = serializers.LoginSerializer
     permission_classes = (AllowAny,)
