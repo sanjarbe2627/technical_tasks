@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.api.v1.base.pagination import CustomPagination
 from apps.api.v1.student import serializers
+from apps.api.v1.student import service
 from apps.users.models import Student
 
 
@@ -80,3 +81,20 @@ class StudentView(GenericAPIView):
         student = self.get_object(*args, **kwargs)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# Task 4
+class StudentListPaginationView(GenericAPIView):
+    def get_object(self, *args, **kwargs):
+        try:
+            object = Student.objects.get(pk=int(kwargs.get("pk")))
+        except Exception:
+            raise NotFound("Ad not found")
+        return object
+
+    def get(self, request, *args, **kwargs):
+        try:
+            results = service.get_student_list(request)
+            return Response(results, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
