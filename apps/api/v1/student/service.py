@@ -46,7 +46,7 @@ def get_student_list(request):
             sql += f"us.contract = {int(contract)} and "
 
         sql = sql.strip("and ")
-    else:
+    elif search:
         sql += f"Where uu.fullname ILIKE '%{search}%' or uu.email ILIKE '%{search}%' or uu.username ILIKE '%{search}%' or us.university ILIKE '%{search}%'"
 
     student_count = _query_student_count(sql=sql)
