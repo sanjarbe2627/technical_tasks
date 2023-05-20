@@ -24,8 +24,7 @@ class StudentView(GenericAPIView):
     def get_object(self, *args, **kwargs):
         try:
             object = self.queryset.get(pk=int(kwargs.get("pk")))
-        except Exception as e:
-            print("error", e)
+        except Exception:
             raise NotFound(_("Student not found"))
         return object
 
@@ -62,7 +61,7 @@ class StudentView(GenericAPIView):
                 return self.get_paginated_response(serializer.data)
 
             serializer = self.get_serializer(queryset, many=True)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data, context={'request': request})
@@ -75,12 +74,9 @@ class StudentView(GenericAPIView):
         serializer = self.get_serializer(instance, data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer, instance_user=instance.user, request=request)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, *args, **kwargs):
         student = self.get_object(*args, **kwargs)
-        if not student:
-            return Response({"error": _(f"Student  not found")},
-                            status=status.HTTP_404_NOT_FOUND)
         student.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
