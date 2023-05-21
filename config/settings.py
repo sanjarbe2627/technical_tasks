@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     # my apps
     "apps.users",
     "apps.files",
+    "apps.geo",
 
 ]
 
