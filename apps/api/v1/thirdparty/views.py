@@ -3,7 +3,6 @@ from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from django.utils.translation import gettext_lazy as _
 
 from apps.api.v1.thirdparty import serializers
 
@@ -17,16 +16,16 @@ class ThirtyWeatherView(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        city = serializer.validated_data.get('city')
-        api_key = "5ad0c49c2c57439c970c433802dbfdcd"
+        filter_url = serializer.validated_data
+        api_key = "ae6829f2de4af3fb24b2858626a4cd4d"
 
-        url = f'http://api.weatherapi.com/v1/forecast.json?key={api_key}&q={city}&days=7'
+        url = f'https://api.openweathermap.org/data/2.5/weather?{filter_url}&appid={api_key}'
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
             return Response(data, status=status.HTTP_200_OK)
         else:
             return Response(
-                {"error": 'Error occurred while fetching weather data'},
+                {"error": 'Server error'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
