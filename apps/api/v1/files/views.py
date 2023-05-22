@@ -37,4 +37,4 @@ class FileDownloadView(APIView):
                 response['Content-Disposition'] = f'attachment; filename="{file.name}"'
                 return response
 
-        return Response({'message': 'File not found.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'File not found.'}, status=status.HTTP_404_NOT_FOUND)
