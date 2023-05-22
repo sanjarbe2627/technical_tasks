@@ -4,5 +4,6 @@ from apps.api.v1.files import views
 
 urlpatterns = [
     path("upload/", views.FileCreateView.as_view(), name="file-upload"),
-    path("download/<int:pk>/", views.FileDownloadView.as_view(), name="file-download"),
+    path("detail/<int:pk>/", views.FileDetailView.as_view(), name="file-detail"),
+    path("download/<int:pk>/", views.FileDownloadView.as_view(), name="file-download")
 ]

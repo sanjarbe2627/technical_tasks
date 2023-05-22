@@ -11,4 +11,4 @@ class FileSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = File
-        fields = ("file",)
+        fields = ("pk", "file",)
