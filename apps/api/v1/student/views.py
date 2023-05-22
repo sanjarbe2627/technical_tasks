@@ -1,4 +1,5 @@
 from rest_framework.generics import GenericAPIView
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
